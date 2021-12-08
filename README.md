@@ -36,5 +36,14 @@ Next, we can use the diagram to get an opproximation of the final orientation of
 
 - For joint #4, the current z-axis is aligned with the world frame's positive y-axis, therefore: ![image](https://user-images.githubusercontent.com/95330513/145291822-3bce1a13-fc1d-4780-86ea-edf521739311.png)
 
+Note that these values are equivalent to the bottom 3 values of each column of the final geometric Jacobian matrix. Therefore, the last step to finding the inputs of the rest of the Jacobian is to take the cross product: ![image169](https://user-images.githubusercontent.com/95330513/145292103-231dfd74-501b-40c4-a63a-9bfd1d5d907b.png) The results are as follows:
+
+![image](https://user-images.githubusercontent.com/95330513/145292836-e4853b69-0ec4-4620-8b9b-8db0e71f051f.png)
+
+Finally, we can combine all of the values to get the final geometric Jacobian:
+
+![image](https://user-images.githubusercontent.com/95330513/145293575-ea59948a-deef-4cd3-b517-d2abf4e598c3.png)
+
+
 
 
