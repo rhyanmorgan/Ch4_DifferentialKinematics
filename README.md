@@ -84,10 +84,26 @@ The code is split into several sections as follows:
 - Several lines are dedicated to importing packages for use in the code which will allow commands to be sent to Coppeliasim. (Lines 17 and 18)
 - Next, the code connects to the remote API server for Coppeliasim using the client ID from the code added to the simulation's script file (Lines 21-25). The IPython console will output the text "program started" and "Connected to remote API server" if Python has successfully connected to Coppeliasim. 
 - The code then assigns variable names to the handles from Coppeliasim's scene hierarchy. This allows the rest of the code to reference the Coppeliasim components using those defined variable names. This is done for all of the joints of the manipulator as well as the EndEffector dummy that was added. (Lines 27-36)
-- Now that these components can be referenced throughout the code, we can assign a velocity to them using the "sim.simxSetJointTargetVelocity" function. This function sets the joints target angular velocity. Note that because the manipulator is dynamically modelled, it may not reach the exact velocities which were input. 
-- 
+- Now that these components can be referenced throughout the code, we can assign a velocity to them using the "sim.simxSetJointTargetVelocity" function. This function sets the joints target angular velocity. Note that because the manipulator is dynamically modeled, it may not reach the exact velocities which were input. Also, note that in the code, the first target velocities of the joints are set to -0.04, -0.04, and -0.05 respectively. (Lines 40-42) 
+- Next, the code pauses for 1 second while the manipulator is moving. The velocities of the joints are then set back to 0. 
+- The code pauses for another 0.5 sec, and then the velcities are set to 0.04, 0.04, and 0.05 respectively for 0.87 seconds. This is don so that the robot will move approximately back to its starting position with apporximately the same initial orientation as the diagram used to solve for the geometric Jacobian previously. 
+- After 0.87 sec, the code finds the position of joints 2, 3, and 4, and the end-effector to be used in the Jacobian calculation. 
+- The code also finds the absolute linear and angular velocities of the end-effector and outputs them as "linearV" and "angularV" respectively. This is the results we will compare to the hand-derived differential kinematics previously calculated. 
+- Finally, the code sets all of the joints' velocities back to 0, ending the simulation. 
 
+## Results
 
+When ran, the simulation outputs the following vector of velocities:
+
+![image](https://user-images.githubusercontent.com/95330513/145311751-3da8a687-9c44-44c3-bd5d-6bf4106e00da.png)
+
+Comparing to the approximated velocities we have the following error for each:
+
+![image](https://user-images.githubusercontent.com/95330513/145312114-3fa9fc29-0a62-431e-9a28-f72659d382fa.png)
+
+Note that most of the results have errors between 3% and 15%. This is not terrible considering all of the factors that were not considered while deriving the results by hand. The dynamics of the model are not taken into consideration so each joint in the model is not moving at the exact input velocity of the joints. Also, as can be clearly viewed in the simulation, the manipulator does not go back to the exact position it started in, therefore there is error in the approximated ![image149](https://user-images.githubusercontent.com/95330513/145312429-3cc69739-ea56-453b-84b0-cbf3f7db9437.png). 
+
+This is why using a simulation such as Coppeliasim is very useful when modelling robotic manipulators. Their results will most likely relate more closely to what an actual robot would do, how it would move, and how fast it sould go based on input torques, orienations, etc. Now, we could get better derived results if we had used more information from the simulation such as the orientation of the joints at the time of measuring the velocity, or finding the exact velocity of each of the joints at that time as well. However, without a program designed to understand the dynamics of the robot, we have to make some approximations as was done in this example. 
 
 
 
